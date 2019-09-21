@@ -22,6 +22,8 @@ gulp.task('browser-sync', function() { // Создаем таск browser-sync
     });
 });
 
+
+
 gulp.task('sass', function() { // Создаем таск Sass
     return gulp.src('./src/sass/*.sass') // Берем источник
         .pipe(sass()) // Преобразуем Sass в CSS посредством gulp-sass
@@ -31,24 +33,64 @@ gulp.task('sass', function() { // Создаем таск Sass
         .pipe(browserSync.reload({stream: true})); // Обновляем CSS на странице при изменении
 });
 
-// gulp.task('scripts', function() {
-//     return gulp.src([ // Берем все необходимые библиотеки
-//         // 'src/js/jquery-3.4.1.min.js' // Берем jQuery
-//         // 'app/libs/magnific-popup/dist/jquery.magnific-popup.min.js' // Берем Magnific Popup
-//         ])
-//         .pipe(concat('libs.min.js')) // Собираем их в кучу в новом файле libs.min.js
-//         .pipe(uglify()) // Сжимаем JS файл
-//         .pipe(gulp.dest('./src/js')); // Выгружаем в папку app/js
-// });
+
 
 gulp.task('code-html', function() {
     return gulp.src('./src/*.html')
     .pipe(browserSync.reload({ stream: true }));
 });
 
-gulp.task('code-css', function() {
-    return gulp.src('./src/css/*.css')
-    .pipe(browserSync.reload({ stream: true }));
+
+
+
+
+// gulp.task('css', function () {
+//     return gulp.src('src/css/*.css')
+//         .pipe(browserify())
+//         .pipe(uglify());
+//         // .pipe(gulp.dest('dist/js'));
+// });
+
+// // create a task that ensures the `js` task is complete before
+// // reloading browsers
+// gulp.task('css-watch', ['css'], function (done) {
+//     browserSync.reload();
+//     done();
+// });
+
+// // use default task to launch Browsersync and watch JS files
+// gulp.task('default', ['css'], function () {
+
+//     // Serve files from the root of this project
+//     browserSync.init({
+//         server: {
+//             baseDir: "./"
+//         }
+//     });
+
+//     // add browserSync.reload to the tasks array to make
+//     // all browsers reload after tasks are complete.
+//     gulp.watch("src/css/*.css", ['css-watch']);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gulp.task('code-css', function(non) {
+    return gulp.src('./src/*/*.css');
+    browserSync.reload();
+    non();
 });
 
 gulp.task('css-libs', function() {
@@ -103,8 +145,25 @@ gulp.task('clear', function (callback) {
 gulp.task('watch', function() {
     gulp.watch('src/sass/**/*.sass', gulp.parallel('sass')); // Наблюдение за sass файлами
     gulp.watch('src/*.html', gulp.parallel('code-html')); // Наблюдение за HTML файлами в корне проекта
-    gulp.watch('src/css/*.css', gulp.parallel('code-css')); // Наблюдение за css файлами в корне проекта
+    // gulp.watch('src/*/*.css', gulp.parallel('code-css')); // Наблюдение за css файлами в корне проекта
+    gulp.watch("src/css/*.css").on('change', browserSync.reload);
     // gulp.watch(['src/js/common.js', 'src/libs/**/*.js'], gulp.parallel('scripts')); // Наблюдение за главным JS файлом и за библиотеками
 });
-gulp.task('default', gulp.parallel('css-libs', 'sass', 'browser-sync', 'watch'));
+
+
+// var purify = require('gulp-purifycss');
+
+// gulp.task('css', function() {
+//   return gulp.src('./src/css/style.css')
+//     .pipe(purify(['./src/js/*.js', './src/*.html']))
+//     .pipe(gulp.dest('./dist/'));
+// });
+
+
+
+gulp.task('default', gulp.parallel('css-libs', 'sass', 'browser-sync', 'watch', 'code-css', 'code-html'));
 gulp.task('build', gulp.parallel('prebuild', 'clean', 'img', 'sass'));
+
+
+
+
