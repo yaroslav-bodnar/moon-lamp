@@ -55,6 +55,7 @@
 			countdown: document.querySelectorAll('.countdown')
 		};
 
+		
 	function isScrolledIntoView(elem) {
 		if (!isNoviBuilder) {
 			return elem.offset().top + elem.outerHeight() >= $window.scrollTop() && elem.offset().top <= $window.scrollTop() + $window.height();
